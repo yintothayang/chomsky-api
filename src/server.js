@@ -7,11 +7,16 @@ const Koa = require('koa')
 const app = new Koa()
 
 // middleware
+app.use(db.open)
 app.use(logger())
 app.use(koaBody())
-
-app.use(db)
 app.use(router.routes())
+app.use(db.close)
 
 
-app.listen(3000)
+
+db.init().then(()=>{
+  app.listen(3000)
+}).catch(error => {
+  console.log(error)
+})

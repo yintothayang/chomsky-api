@@ -10,9 +10,8 @@ async function create(ctx) {
 
 
 async function list(ctx) {
-  let cursor = await r.table('decks').orderBy({index: "createdAt"}).run(ctx.db_conn)
+  let cursor = await r.table('decks').run(ctx.db_conn)
   let result = await cursor.toArray()
-  console.log(result)
   ctx.body = JSON.stringify(result)
 }
 
