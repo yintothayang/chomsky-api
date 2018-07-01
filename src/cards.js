@@ -1,34 +1,64 @@
-var r = require('rethinkdb')
+const TABLE_NAME = 'cards'
+const r = require('rethinkdb')
 
-async function create(ctx) {
-  ctx.body = JSON.stringify(ctx.request)
-  // const post = ctx.request.body
-  // const id = posts.push(post) - 1
-  // post.created_at = new Date()
-  // post.id = id;
-  // ctx.body = ''
+async function create(ctx, next){
+  try{
+    let card = ctx.request.body
+    card.createdAt = r.now()
+    let result = await r.table(TABLE_NAME).insert(card, {returnChanges: true}).run(this.db_conn)
+
+    card = result.changes[0].new_val
+    this.body = JSON.stringify(card)
+  }
+  catch(e) {
+    this.status = 500;
+    this.body = e.message
+  }
+  await next()
 }
 
 
-async function list(ctx) {
-  console.log("halp")
-  // let cursor = await r.table('cards').orderBy({index: "createdAt"}).run(ctx.db_conn)
-  // let result = await cursor.toArray()
-  // console.log(result)
-  // ctx.body = JSON.stringify(result)
+async function list(ctx, next){
+  let cursor = await r.table(TABLE_NAME).run(ctx.db_conn)
+  let result = await cursor.toArray()
+  ctx.body = JSON.stringify(result)
+  await next()
 }
 
 
-async function update(ctx) {
-  ctx.body = JSON.stringify(ctx.request)
+async function update(ctx, next){
+  try{
+    var card = ctx.request.body
+    delete card._saving
+    if ((card == null) || (card.id == null)) {
+      throw new Error("The card must have a field `id`.");
+    }
+
+    var result = await r.table(TABLE_NAME).get(card.id).update(card, {returnChanges: true}).run(this.db_conn)
+    this.body = JSON.stringify(result.changes[0].new_val)
+  }
+  catch(e) {
+    this.status = 500;
+    this.body = e.message
+  }
+  await next()
 }
 
-async function remove(ctx) {
-  ctx.body = JSON.stringify(ctx.request)
-  // const id = ctx.params.id
-  // const post = posts[id]
-  // if (!post) ctx.throw(404, 'invalid post id')
-  // ctx.body = ''
+async function remove(ctx, next){
+  try{
+    let card = ctx.request.body
+    if ((todo == null) || (todo.id == null)) {
+      throw new Error("The todo must have a field `id`.")
+    }
+    var result = await r.table(TABLE_NAME).get(todo.id).delete().run(this.db_conn)
+    this.status = 200
+    this.body = null
+  }
+  catch(e) {
+    this.status = 500;
+    this.body = e.message || http.STATUS_CODES[this.status];
+  }
+  await next()
 }
 
 

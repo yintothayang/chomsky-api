@@ -1,4 +1,4 @@
-var r = require('rethinkdb')
+const r = require('rethinkdb')
 
 const config = {
   host: "localhost",
@@ -36,9 +36,11 @@ class DB {
       // Create Cards table
       let cards_table = await r.tableCreate('cards').run(conn)
 
-    } else {
-      console.log("done")
     }
+
+    await conn.close()
+    console.log("database initialized")
+
   }
 
   async open(ctx, next){
