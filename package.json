@@ -1,21 +1,19 @@
 {
-  "name": "chomsky-api",
+  "name": "einstein-api",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "serve": "nodemon src/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yintothayang/chomsky-api.git"
+  },
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "@koa/cors": "^2.2.1",
-    "koa": "^2.5.1",
-    "koa-body": "^4.0.1",
-    "koa-logger": "^3.2.0",
-    "koa-router": "^7.4.0",
-    "rethinkdb": "^2.3.3"
-  }
+  "bugs": {
+    "url": "https://github.com/yintothayang/chomsky-api/issues"
+  },
+  "homepage": "https://github.com/yintothayang/chomsky-api#readme"
 }
