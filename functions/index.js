@@ -1,28 +1,34 @@
 const functions = require('firebase-functions');
 
-exports.translate = functions.https.onRequest((request, response) => {
+exports.translate = functions.https.onCall((data, context) => {
   const Translate = require('@google-cloud/translate')
   const translate = new Translate({
     projectId: "einstein-213121"
   })
 
-  let text = request.body.text
-  let target = request.body.target
+  let text = data.text
+  let target = data.target
 
+  console.log("text: ", text)
+  console.log("target: ", target)
+
+  if(!text || !target){
+    return {error: "text and target required"}
+  }
   try {
     translate
       .translate(text, target)
       .then(results => {
         let translations = results[0]
         translations = Array.isArray(translations) ? translations : [translations]
-        response.send(JSON.stringify(translations))
+        return translations
       })
   } catch(e){
-    response.send(JSON.stringify(e))
+    return e
   }
 })
 
-exports.getLangs = functions.https.onRequest((request, response) => {
+exports.getLangs = functions.https.onCall((request, response) => {
   const Translate = require('@google-cloud/translate')
   const translate = new Translate({
     projectId: "einstein-213121"
