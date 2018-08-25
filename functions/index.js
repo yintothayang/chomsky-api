@@ -9,8 +9,8 @@ exports.translate = functions.https.onCall(async (data, context) => {
   let text = data.text
   let target = data.target
 
-  console.log("text: ", text)
-  console.log("target: ", target)
+  // console.log("text: ", text)
+  // console.log("target: ", target)
 
   if(!text || !target){
     return {error: "text and target required"}
@@ -21,6 +21,10 @@ exports.translate = functions.https.onCall(async (data, context) => {
     translation = await translate
       .translate(text, target)
       .then(results => {
+        // console.log("results :", results)
+        // console.log("results[1] :", results[1])
+        // console.log("results[1].data :", results[1].data)
+        // console.log("results[1].data.translations :", results[1].data.translations)
         let translations = results[0]
         translations = Array.isArray(translations) ? translations : [translations]
         return translations
